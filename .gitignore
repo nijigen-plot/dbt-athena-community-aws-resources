@@ -1,3 +1,4 @@
 .envrc
 /target
 /logs
+.dbt/.user.yml
