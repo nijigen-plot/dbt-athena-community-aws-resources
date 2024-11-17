@@ -1,0 +1,30 @@
+[project]
+name = "dbt-athena-community-aws-resources"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "nijigen-plot", email = "nijigenprompt@gmail.com" }
+]
+dependencies = [
+    "dbt-athena-community>=1.8.4",
+]
+readme = "README.md"
+requires-python = "<3.13,>=3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "isort>=5.13.2",
+    "black>=24.10.0",
+    "pre-commit>=4.0.1",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dbt_athena_community_aws_resources"]
