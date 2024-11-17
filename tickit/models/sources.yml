@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: tickit
+    database: awsdatacatalog
+    schema: dbt-datalake
+    tables:
+      - name: category
+      - name: date
+      - name: event
+      - name: listing
+      - name: sales
+      - name: users
+      - name: venue
