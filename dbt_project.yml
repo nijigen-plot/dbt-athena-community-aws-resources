@@ -11,12 +11,12 @@ profile: 'tickit'
 # These configurations specify where dbt should look for different types of files.
 # The `model-paths` config, for example, states that models in this project can be
 # found in the "models/" directory. You probably won't need to change these!
-model-paths: ["models"]
-analysis-paths: ["analyses"]
-test-paths: ["tests"]
-seed-paths: ["seeds"]
-macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
+model-paths: ["tickit/models"]
+analysis-paths: ["tickit/analyses"]
+test-paths: ["tickit/tests"]
+seed-paths: ["tickit/seeds"]
+macro-paths: ["tickit/macros"]
+snapshot-paths: ["tickit/snapshots"]
 
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
