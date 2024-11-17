@@ -1,0 +1,13 @@
+version: 2
+models:
+  - name: sales
+    columns:
+      - name: year
+        description: ''
+        data_type: smallint
+      - name: month
+        description: ''
+        data_type: varchar(32)
+      - name: commmission
+        description: ''
+        data_type: decimal(38,2)

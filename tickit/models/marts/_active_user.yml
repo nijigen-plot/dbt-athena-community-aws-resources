@@ -1,0 +1,10 @@
+version: 2
+models:
+  - name: active_user
+    columns:
+      - name: calendar_date
+        description: ''
+        data_type: date
+      - name: user_count
+        description: ''
+        data_type: bigint
