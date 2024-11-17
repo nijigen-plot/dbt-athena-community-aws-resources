@@ -6,9 +6,193 @@ sources:
     schema: dbt-datalake
     tables:
       - name: category
+        columns:
+          - name: catid
+            description: ''
+            data_type: smallint
+          - name: catgroup
+            description: ''
+            data_type: varchar(64)
+          - name: catname
+            description: ''
+            data_type: varchar(64)
+          - name: catdesc
+            description: ''
+            data_type: varchar(256)
       - name: date
+        columns:
+          - name: dateid
+            description: ''
+            data_type: smallint
+          - name: caldate
+            description: ''
+            data_type: date
+          - name: day
+            description: ''
+            data_type: varchar(16)
+          - name: week
+            description: ''
+            data_type: smallint
+          - name: month
+            description: ''
+            data_type: varchar(32)
+          - name: qtr
+            description: ''
+            data_type: varchar(32)
+          - name: year
+            description: ''
+            data_type: smallint
+          - name: holiday
+            description: ''
+            data_type: boolean
       - name: event
+        columns:
+          - name: eventid
+            description: ''
+            data_type: int
+          - name: venueid
+            description: ''
+            data_type: smallint
+          - name: catid
+            description: ''
+            data_type: smallint
+          - name: dateid
+            description: ''
+            data_type: smallint
+          - name: eventname
+            description: ''
+            data_type: varchar(1024)
+          - name: starttime
+            description: ''
+            data_type: timestamp
       - name: listing
+        columns:
+          - name: listid
+            description: ''
+            data_type: int
+          - name: sellerid
+            description: ''
+            data_type: int
+          - name: eventid
+            description: ''
+            data_type: int
+          - name: dateid
+            description: ''
+            data_type: smallint
+          - name: numtickets
+            description: ''
+            data_type: smallint
+          - name: priceperticket
+            description: ''
+            data_type: decimal(8,2)
+          - name: totalprice
+            description: ''
+            data_type: decimal(8,2)
+          - name: listtime
+            description: ''
+            data_type: timestamp
       - name: sales
+        columns:
+          - name: salesid
+            description: ''
+            data_type: int
+          - name: listid
+            description: ''
+            data_type: int
+          - name: sellerid
+            description: ''
+            data_type: int
+          - name: buyerid
+            description: ''
+            data_type: int
+          - name: eventid
+            description: ''
+            data_type: int
+          - name: dateid
+            description: ''
+            data_type: smallint
+          - name: qtysold
+            description: ''
+            data_type: smallint
+          - name: pricepaid
+            description: ''
+            data_type: decimal(8,2)
+          - name: commission
+            description: ''
+            data_type: decimal(8,2)
+          - name: saletime
+            description: ''
+            data_type: timestamp
       - name: users
+        columns:
+          - name: userid
+            description: ''
+            data_type: int
+          - name: username
+            description: ''
+            data_type: varchar(64)
+          - name: firstname
+            description: ''
+            data_type: varchar(256)
+          - name: lastname
+            description: ''
+            data_type: varchar(256)
+          - name: city
+            description: ''
+            data_type: varchar(256)
+          - name: state
+            description: ''
+            data_type: varchar(16)
+          - name: email
+            description: ''
+            data_type: varchar(512)
+          - name: phone
+            description: ''
+            data_type: varchar(64)
+          - name: likesports
+            description: ''
+            data_type: boolean
+          - name: liketheatre
+            description: ''
+            data_type: boolean
+          - name: likeconcerts
+            description: ''
+            data_type: boolean
+          - name: likejazz
+            description: ''
+            data_type: boolean
+          - name: likeclassical
+            description: ''
+            data_type: boolean
+          - name: likeopera
+            description: ''
+            data_type: boolean
+          - name: likerock
+            description: ''
+            data_type: boolean
+          - name: likevegas
+            description: ''
+            data_type: boolean
+          - name: likebroadway
+            description: ''
+            data_type: boolean
+          - name: likemusicals
+            description: ''
+            data_type: boolean
       - name: venue
+        columns:
+          - name: venueid
+            description: ''
+            data_type: smallint
+          - name: venuename
+            description: ''
+            data_type: varchar(512)
+          - name: venuecity
+            description: ''
+            data_type: varchar(128)
+          - name: venuestate
+            description: ''
+            data_type: varchar(16)
+          - name: venueseats
+            description: ''
+            data_type: int

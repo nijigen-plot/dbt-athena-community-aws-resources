@@ -1,0 +1,34 @@
+version: 2
+models:
+  - name: stg_tickit__sales
+    columns:
+      - name: sales_id
+        description: ''
+        data_type: int
+      - name: list_id
+        description: ''
+        data_type: int
+      - name: seller_id
+        description: ''
+        data_type: int
+      - name: buyer_id
+        description: ''
+        data_type: int
+      - name: event_id
+        description: ''
+        data_type: int
+      - name: date_id
+        description: ''
+        data_type: smallint
+      - name: quantity_sold
+        description: ''
+        data_type: smallint
+      - name: price_paid
+        description: ''
+        data_type: decimal(8,2)
+      - name: commission
+        description: ''
+        data_type: decimal(8,2)
+      - name: sale_time
+        description: ''
+        data_type: timestamp
