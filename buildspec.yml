@@ -7,9 +7,10 @@ env:
 
 phases:
   install:
-    runtime-version:
+    runtime-versions:
       python: 3.11.4
     commands:
+      - python3 --version
       - sudo apt-get update
       - pip install rye
       - rye sync
