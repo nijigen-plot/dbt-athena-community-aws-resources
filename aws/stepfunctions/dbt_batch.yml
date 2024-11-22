@@ -1,0 +1,54 @@
+Comment: dbt workflow with AWS Batch
+StartAt: dbt run
+States:
+  dbt run:
+    Type: Task
+    Resource: arn:aws:states:::batch:submitJob.sync
+    Parameters:
+      JobName: dbt-run-daily
+      ContainerOverrides:
+        Command.$: "States.Array('sh', '-c', 'cd /dbt-athena-community-aws-resources && rye run dbt run')"
+      JobQueue: dbt-batch-job-queue
+      JobDefinition: dbt-batch-job-definition
+    Next: dbt docs generate
+    Catch:
+      - ErrorEquals:
+          - States.ALL
+        Next: Fail
+        ResultPath: $.Error
+  dbt docs generate:
+    Type: Task
+    Resource: arn:aws:states:::batch:submitJob.sync
+    Parameters:
+      JobName: dbt-docs-generate
+      ContainerOverrides:
+        Command.$: "States.Array('sh', '-c', 'cd /dbt-athena-community-aws-resources && rye run dbt docs generate && python generate_static_html.py && aws s3 cp target/index2.html s3://nijipro-dbt-resources/docs.html')"
+      JobQueue: dbt-batch-job-queue
+      JobDefinition: dbt-batch-job-definition
+    Next: dbt test
+    Catch:
+      - ErrorEquals:
+          - States.ALL
+        Next: Fail
+        ResultPath: $.Error
+  dbt test:
+    Type: Task
+    Resource: arn:aws:states:::batch:submitJob.sync
+    Parameters:
+      JobName: dbt-test-daily
+      ContainerOverrides:
+        Command.$: "States.Array('sh', '-c', 'cd /dbt-athena-community-aws-resources && rye run dbt test')"
+      JobQueue: dbt-batch-job-queue
+      JobDefinition: dbt-batch-job-definition
+    Next: Success
+    Catch:
+      - ErrorEquals:
+          - States.ALL
+        Next: Fail
+        ResultPath: $.Error
+  Success:
+    Type: Succeed
+  Fail:
+    Type: Fail
+    ErrorPath: $.Error
+    CausePath: $.Error
