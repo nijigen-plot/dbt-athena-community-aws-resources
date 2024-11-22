@@ -11,5 +11,5 @@ tickit:
       work_group: primary # あとで適切なwork_groupにする 
       num_retries: 0
       num_boto3_retries: 1
-      aws_profile_name: default # あとで適切なprofileにする
+      aws_profile_name: dbt-local
   target: prod
