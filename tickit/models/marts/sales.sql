@@ -1,7 +1,7 @@
 SELECT
     d.year
     , d.month
-    , SUM(commission) as commmission
+    , SUM(commission) as commission
 FROM
     {{ ref('stg_tickit__sales') }} as s
 INNER JOIN
