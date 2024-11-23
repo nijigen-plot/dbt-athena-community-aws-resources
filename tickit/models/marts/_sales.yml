@@ -8,6 +8,8 @@ models:
       - name: month
         description: ''
         data_type: varchar(32)
-      - name: commmission
+      - name: commission
         description: ''
         data_type: decimal(38,2)
+        tests:
+          - not_null
