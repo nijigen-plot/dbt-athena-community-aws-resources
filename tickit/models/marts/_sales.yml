@@ -11,3 +11,5 @@ models:
       - name: commmission
         description: ''
         data_type: decimal(38,2)
+        tests:
+          - not_null
