@@ -370,3 +370,53 @@ Resources:
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: !Sub ${CidrBlock}
+  # Batch
+  BatchComputeEnvironment:
+    Type: AWS::Batch::ComputeEnvironment
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Type: MANAGED
+      ServiceRole: !GetAtt DataPipeLineOperationRole.Arn
+      ComputeEnvironmentName: dbt-batch-compute-env
+      ComputeResources:
+        Subnets: 
+          - !Ref Subnet
+        Type: FARGATE
+        InstanceTypes: []
+        Ec2Configuration: []
+        SecurityGroupIds: 
+          - !Ref DbtBatchSecurityGroup
+        MaxvCpus: 16
+      State: ENABLED
+  BatchJobQueue:
+    Type: AWS::Batch::JobQueue
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      ComputeEnvironmentOrder:
+        - ComputeEnvironment: !Ref BatchComputeEnvironment
+          Order: 1
+      Priority: 500
+      State: ENABLED
+      JobQueueName: dbt-batch-job-queue
+  BatchJobDefinition:
+    Type: AWS::Batch::JobDefinition
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      JobDefinitionName: dbt-batch-job-definition
+      Type: container
+      ContainerProperties:
+        Command:
+          - echo
+          - "Hello World!"
+        Image: !Sub ${AWS::AccountId}.dkr.ecr.ap-northeast-1.amazonaws.com/dbt-batch:latest
+        ResourceRequirements:
+          - Type: VCPU
+            Value: "1"
+          - Type: MEMORY
+            Value: "2048"
+        NetworkConfiguration:
+          AssignPublicIp: ENABLED
+        ExecutionRoleArn: !GetAtt DataPipeLineOperationRole.Arn
