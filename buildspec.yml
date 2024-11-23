@@ -40,7 +40,7 @@ phases:
       - echo deploy data pipeline infrastructure
       - aws cloudformation package --template-file aws/cloudformation/$dwh_stack_name.yml --s3-bucket $target_bucket --s3-prefix cloudformation/package --output-template-file /tmp/$dwh_stack_name.yml --force-upload
       - |
-        aws cloudformation deploy --no-fail-on-empty-changeset --template-file /tmp/$dwh_stack_name.yml --stack-name $dwh_stack_name --capabilities CAPABILITY_NAMED_IAM CAPABILITY_IAM \
+        aws cloudformation deploy --no-fail-on-empty-changeset --template-file /tmp/$dwh_stack_name.yml --stack-name $dwh_stack_name --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/cloudformation-dbt-athena-community-resources-service-role --capabilities CAPABILITY_NAMED_IAM CAPABILITY_IAM \
         --parameter-overrides \
         "AWSServiceExecuteResultNotificationParam=$AWSServiceExecuteResultNotificationParam" \
         "DbtBatchParam=$DbtBatchParam" \
