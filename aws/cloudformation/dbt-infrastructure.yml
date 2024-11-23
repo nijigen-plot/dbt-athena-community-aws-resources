@@ -45,21 +45,30 @@ Resources:
         - arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/secretmanager-read-slack-webhook-url
-  LocalDevelopmentAssumeRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: LocalDevelopmentAssumeRole
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              AWS:
-                - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role # ここらへんまだ
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - !Ref AthenaAccess
+  # LocalDevelopmentAssumeRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     RoleName: LocalDevelopmentAssumeRole
+  #     AssumeRolePolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             AWS:
+  #               - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role # ここらへんまだ
+  #           Action: sts:AssumeRole
+  #     ManagedPolicyArns:
+  #       - !Ref AthenaAccess
   # IAM Policy
+  # ExecuteResources:
+  #   Type: AWS::IAM::ManagedPolicy
+  #   DeletionPolicy: Delete
+  #   UpdateReplacePolicy: Delete
+  #   Properties:
+  #     ManagedPolicyName: ExecuteResources
+  #     PolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
   AthenaAccess:
     Type: AWS::IAM::ManagedPolicy
     DeletionPolicy: Delete
