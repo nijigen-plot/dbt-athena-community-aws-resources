@@ -6,7 +6,7 @@ models:
         description: ''
         data_type: date
         tests:
-          - unique:
+          - unique
           - not_null
       - name: user_count
         description: ''
