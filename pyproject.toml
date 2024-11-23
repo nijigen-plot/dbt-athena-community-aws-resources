@@ -6,11 +6,11 @@ authors = [
     { name = "nijigen-plot", email = "nijigenprompt@gmail.com" }
 ]
 dependencies = [
-    "dbt-athena-community>=1.8.4",
-    "dbt-osmosis>=0.13.2",
+    "dbt-athena-community==1.8.4",
+    "dbt-osmosis==0.13.2",
 ]
 readme = "README.md"
-requires-python = "<3.13,>=3.8"
+requires-python = "<3.13,>=3.9"
 
 [build-system]
 requires = ["hatchling"]
@@ -19,9 +19,9 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = [
-    "isort>=5.13.2",
-    "black>=24.10.0",
-    "pre-commit>=4.0.1",
+    "isort==5.13.2",
+    "black==24.10.0",
+    "pre-commit==4.0.1",
 ]
 
 [tool.hatch.metadata]
