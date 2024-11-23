@@ -76,8 +76,8 @@ Resources:
             Action:
               - s3:*
             Resource:
-              - !Sub arn:${AWS::Partition}:s3:::${DataPipelineResourceLocation}
-              - !Sub arn:${AWS::Partition}:s3:::${DataPipelineResourceLocation}/*
+              - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceLocation}
+              - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceLocation}/*
             Effect: Allow
           - Condition:
               StringEquals:
@@ -154,7 +154,7 @@ Resources:
     DeletionPolicy: Delete
     Properties:
       Code:
-        S3Bucket: !Sub ${DbtTableResourceLocation}
+        S3Bucket: !Sub ${DataPipelineResourceLocation}
         S3Key: lambda//aws_service_execute_result_notification.zip
         S3ObjectVersion: !Ref AWSServiceExecuteResultNotificationParam
       FunctionName: aws-service-execute-result-notification
@@ -170,7 +170,7 @@ Resources:
       StateMachineName: dbt-batch
       StateMachineType: STANDARD
       DefinitionS3Location:
-        Bucket: !Sub ${DbtTableResourceLocation}
+        Bucket: !Sub ${DataPipelineResourceLocation}
         Key: stepfunctions/dbt_batch.yml
         Version: !Ref DbtBatchParam 
       RoleArn: !GetAtt DataPipeLineOperationRole.Arn
