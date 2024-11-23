@@ -40,6 +40,7 @@ Resources:
                 - scheduler.amazonaws.com
                 - sns.amazonaws.com
                 - glue.amazonaws.com
+                - lambda.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess
