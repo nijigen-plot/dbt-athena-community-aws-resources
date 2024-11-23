@@ -12,8 +12,10 @@ phases:
     commands:
       - python3 --version
       - sudo apt-get update
-      - pip install rye
-      - rye sync
+      - curl -sSf https://rye.astral.sh/get | RYE_NO_AUTO_INSTALL=1 RYE_INSTALL_OPTION="--yes" bash
+      - . "$HOME/.rye/env"
+      - rye --version
+      - rye sync --no-dev --no-lock
   pre_build:
     commands:
       - aws --version
