@@ -345,7 +345,7 @@ Resources:
         Ref: Subnet
       RouteTableId:
         Ref: PublicRouteTable
-  RedshiftServerlessSecurityGroup:
+  DbtBatchSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId:
