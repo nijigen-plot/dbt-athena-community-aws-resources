@@ -164,7 +164,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: !Sub ${DataPipelineResourceLocation}
-        S3Key: lambda//aws_service_execute_result_notification.zip
+        S3Key: lambda/aws_service_execute_result_notification.zip
         S3ObjectVersion: !Ref AWSServiceExecuteResultNotificationParam
       FunctionName: aws-service-execute-result-notification
       Handler: lambda_function.lambda_handler
