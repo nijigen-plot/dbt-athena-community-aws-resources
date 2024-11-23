@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     target_bucket: 'nijipro-dbt-resources'
-    dwh_stack_name: 'dbt_infrastructure'
+    dwh_stack_name: 'dbt-infrastructure'
 
 phases:
   install:
