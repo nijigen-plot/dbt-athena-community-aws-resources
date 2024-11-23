@@ -44,6 +44,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/secretmanager-read-slack-webhook-url/
   LocalDevelopmentAssumeRole:
     Type: AWS::IAM::Role
     Properties:
