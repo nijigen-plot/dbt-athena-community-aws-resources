@@ -28,8 +28,8 @@ Resources:
   # IAM Role
   DataPipeLineOperationRole:
     Type: AWS::IAM::Role
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
     Properties:
       RoleName: DataPipeLineOperationRole
       AssumeRolePolicyDocument:
