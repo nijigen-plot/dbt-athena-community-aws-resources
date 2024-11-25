@@ -423,3 +423,6 @@ Resources:
         NetworkConfiguration:
           AssignPublicIp: ENABLED
         ExecutionRoleArn: !GetAtt DataPipeLineOperationRole.Arn
+        JobRoleArn: !GetAtt DataPipeLineOperationRole.Arn
+      PlatformCapabilities: 
+        - FARGATE
