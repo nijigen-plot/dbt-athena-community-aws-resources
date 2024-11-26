@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# AWS_ACCOUNT_IDは~/.bashrcでexportして事前に定義してください
+# AWS_ACCOUNT_IDは.envrcで定義してください
 ROLE_ARN="arn:aws:iam::$AWS_ACCOUNT_ID:role/DbtLocalAssumeRole"
 SESSION_NAME="DbtLocalAssumeRole"
 PROFILE_NAME="dbt-local"
