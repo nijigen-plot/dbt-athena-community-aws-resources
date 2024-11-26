@@ -48,7 +48,7 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/secretmanager-read-slack-webhook-url
-        - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/cloudformation-dbt-athena-community-resources-service-role
+        - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/cfn-nijipro-dbt-resources-create
   LocalDevelopmentAssumeRole:
     Type: AWS::IAM::Role
     Properties:
