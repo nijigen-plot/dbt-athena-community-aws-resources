@@ -73,21 +73,13 @@ Resources:
       PolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Condition:
-              StringEquals:
-                aws:CalledViaLast:
-                  - athena.amazonaws.com
-            Action:
+          - Action:
               - s3:*
             Resource:
               - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceLocation}
               - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceLocation}/*
             Effect: Allow
-          - Condition:
-              StringEquals:
-                aws:CalledViaLast:
-                  - athena.amazonaws.com
-            Action:
+          - Action:
               - s3:GetBucketLocation
               - s3:GetObject
               - s3:ListBucket
@@ -121,11 +113,7 @@ Resources:
             Resource: 
               - !Sub arn:${AWS::Partition}:athena:ap-northeast-1:${AWS::AccountId}:workgroup/${AthenaDbtWorkgroup}
             Effect: Allow
-          - Condition:
-              StringEquals:
-                aws:CalledViaLast:
-                  - athena.amazonaws.com
-            Action: 
+          - Action: 
               - glue:Get*
               - glue:Create*
               - glue:Delete*
