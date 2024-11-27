@@ -78,6 +78,8 @@ Resources:
             Resource:
               - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceLocation}
               - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceLocation}/*
+              - arn:aws:s3:::quark-dbt-tables
+              - arn:aws:s3:::quark-dbt-tables/*
             Effect: Allow
           - Action:
               - s3:GetBucketLocation
