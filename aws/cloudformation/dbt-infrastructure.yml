@@ -125,7 +125,14 @@ Resources:
               StringEquals:
                 aws:CalledViaLast:
                   - athena.amazonaws.com
-            Action: glue:Get*
+            Action: 
+              - glue:Get*
+              - glue:Create*
+              - glue:Delete*
+              - glue:Describe*
+              - glue:List*
+              - glue:SearchTables
+              - glue:Update*
             Resource:
               - !Sub arn:${AWS::Partition}:glue:ap-northeast-1:${AWS::AccountId}:catalog
               - !Sub arn:${AWS::Partition}:glue:ap-northeast-1:${AWS::AccountId}:database/*
