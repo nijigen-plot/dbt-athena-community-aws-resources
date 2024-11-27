@@ -8,7 +8,7 @@ tickit:
       schema: tickit 
       threads: 3
       type: athena
-      work_group: primary # あとで適切なwork_groupにする 
+      work_group: dbt 
       num_retries: 0
       num_boto3_retries: 1
       aws_profile_name: dbt-local
