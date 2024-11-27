@@ -156,6 +156,7 @@ Resources:
       Description: workgroup for access from dbt
       Name: dbt
       State: ENABLED
+      RecursiveDeleteOption: true
       WorkGroupConfiguration:
         ResultConfiguration:
           OutputLocation: !Sub s3://${QueryOutputLocation}/
