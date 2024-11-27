@@ -366,9 +366,6 @@ Resources:
       - Key: Name
         Value: !Sub |
           ${ProjectName}-batch-sg
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: !Sub ${CidrBlock}
   # Batch
   BatchComputeEnvironment:
     Type: AWS::Batch::ComputeEnvironment
