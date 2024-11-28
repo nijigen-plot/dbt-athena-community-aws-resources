@@ -1,4 +1,4 @@
-import json # loggerにする
+import json  # loggerにする
 
 import boto3
 import urllib3
@@ -9,7 +9,7 @@ http = urllib3.PoolManager()
 
 def get_secret():
 
-    secret_name = "slack-wehbook-url"
+    secret_name = "slack-webhook-url"
     region_name = "ap-northeast-1"
 
     # Create a Secrets Manager client
