@@ -246,8 +246,8 @@ def athena_notification(event_msg: dict, url: str, channel_name: str):
 
 
 def lambda_handler(event, context):
-    url = json.loads(get_secret())["team-dev-bot-dwh-update-notification"]
-    channel_name = "#team-dev-bot-dwh-update-notification"
+    url = json.loads(get_secret())["general"]
+    channel_name = "#general"
     event_message = json.loads(event["Records"][0]["Sns"]["Message"])  # Athenaの場合あとで.strip('"')する
 
     # テスト動作させるときと実際のイベントでは中身jsonだったりstrだったりかわるので対処
