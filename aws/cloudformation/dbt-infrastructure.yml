@@ -285,6 +285,21 @@ Resources:
               Service: events.amazonaws.com
             Action: sns:Publish
             Resource: !Ref ExecutionToLambda
+  # SNS Subscription
+  ExecutionToLambdaSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref ExecutionToLambda
+      Protocol: lambda
+      Endpoint: !GetAtt AWSServiceExecuteResultNotification.Arn
+  # SNS Lambda Permission
+  ExecutionToLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref AWSServiceExecuteResultNotification
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref ExecutionToLambda
   # VPCまわり
   VPC:
     Type: AWS::EC2::VPC
