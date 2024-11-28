@@ -7,7 +7,10 @@ States:
     Parameters:
       JobName: dbt-run-daily
       ContainerOverrides:
-        Command.$: "States.Array('sh', '-c', 'cd /dbt-athena-community-aws-resources && rye run dbt run')"
+        Command:
+          - "/bin/bash"
+          - "-c"
+          - "source $HOME/.rye/env && rye run dbt run"
       JobQueue: dbt-batch-job-queue
       JobDefinition: dbt-batch-job-definition
     Next: dbt docs generate
@@ -22,7 +25,10 @@ States:
     Parameters:
       JobName: dbt-docs-generate
       ContainerOverrides:
-        Command.$: "States.Array('sh', '-c', 'cd /dbt-athena-community-aws-resources && rye run dbt docs generate && python generate_static_html.py && aws s3 cp target/index2.html s3://nijipro-dbt-resources/docs.html')"
+        Command:
+          - "/bin/bash"
+          - "-c"
+          - "source $HOME/.rye/env && rye run dbt docs generate && rye run python generate_static_html.py && aws s3 cp target/index2.html s3://nijipro-dbt-resources/docs.html"
       JobQueue: dbt-batch-job-queue
       JobDefinition: dbt-batch-job-definition
     Next: dbt test
@@ -37,7 +43,10 @@ States:
     Parameters:
       JobName: dbt-test-daily
       ContainerOverrides:
-        Command.$: "States.Array('sh', '-c', 'cd /dbt-athena-community-aws-resources && rye run dbt test')"
+        Command:
+          - "/bin/bash"
+          - "-c"
+          - "source $HOME/.rye/env && rye run dbt test"
       JobQueue: dbt-batch-job-queue
       JobDefinition: dbt-batch-job-definition
     Next: Success
