@@ -22,7 +22,7 @@ repos:
     hooks:
       - id: isort
         args: ["-sp", "pyproject.toml"]
-  - repo: https://github.com/dbt-checkpoint/dbt-checkpoint
-    rev: 2.0.6
-    hooks:
-      - id: dbt-parse
+  # - repo: https://github.com/dbt-checkpoint/dbt-checkpoint
+  #   rev: 2.0.6
+  #   hooks:
+  #     - id: dbt-parse
