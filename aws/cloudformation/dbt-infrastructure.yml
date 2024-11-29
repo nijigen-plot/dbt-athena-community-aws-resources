@@ -70,7 +70,6 @@ Resources:
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
     Properties:
-      ManagedPolicyName: AthenaAccess
       PolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -113,10 +112,10 @@ Resources:
               - athena:DeletePreparedStatement
               - athena:GetPreparedStatement
               - athena:UpdatePreparedStatement
-            Resource: 
+            Resource:
               - !Sub arn:${AWS::Partition}:athena:ap-northeast-1:${AWS::AccountId}:workgroup/${AthenaDbtWorkgroup}
             Effect: Allow
-          - Action: 
+          - Action:
               - glue:Get*
               - glue:Create*
               - glue:Delete*
@@ -175,7 +174,7 @@ Resources:
       DefinitionS3Location:
         Bucket: !Sub ${DataPipelineResourceLocation}
         Key: stepfunctions/dbt_batch.yml
-        Version: !Ref DbtBatchParam 
+        Version: !Ref DbtBatchParam
       RoleArn: !GetAtt DataPipeLineOperationRole.Arn
   # EventBridge Scheduler
   DBTFunctionsDailyExecute:
@@ -316,58 +315,47 @@ Resources:
     Properties:
       Tags:
       - Key: Application
-        Value:
-          Ref: AWS::StackId
+        Value: !Ref AWS::StackId
       - Key: Network
         Value: Public
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId:
-        Ref: VPC
-      InternetGatewayId:
-        Ref: InternetGateway
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     DependsOn: AttachGateway
     Properties:
-      VpcId:
-        Ref: VPC
+      VpcId: !Ref VPC
       Tags:
       - Key: Name
         Value: !Sub |
           ${ProjectName}-batch-public-rtb
       - Key: Application
-        Value:
-          Ref: AWS::StackId
+        Value: !Ref AWS::StackId
   PublicRoute:
     Type: AWS::EC2::Route
     DependsOn: AttachGateway
     Properties:
-      RouteTableId:
-        Ref: PublicRouteTable
+      RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId:
-        Ref: InternetGateway
+      GatewayId: !Ref InternetGateway
   Subnet:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: VPC
+      VpcId: !Ref VPC
       AvailabilityZone: !Select [ 0, !GetAZs ]
       CidrBlock: !Select [ 0, !Cidr [ !GetAtt VPC.CidrBlock, 4, 8 ]]
   SubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId:
-        Ref: Subnet
-      RouteTableId:
-        Ref: PublicRouteTable
+      SubnetId: !Ref Subnet
+      RouteTableId: !Ref PublicRouteTable
   DbtBatchSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      VpcId:
-        Ref: VPC
+      VpcId: !Ref VPC
       GroupDescription: Marker security group for Application server.
       Tags:
       - Key: Name
@@ -383,12 +371,12 @@ Resources:
       ServiceRole: !GetAtt DataPipeLineOperationRole.Arn
       ComputeEnvironmentName: dbt-batch-compute-env
       ComputeResources:
-        Subnets: 
+        Subnets:
           - !Ref Subnet
         Type: FARGATE
         InstanceTypes: []
         Ec2Configuration: []
-        SecurityGroupIds: 
+        SecurityGroupIds:
           - !Ref DbtBatchSecurityGroup
         MaxvCpus: 16
       State: ENABLED
@@ -424,5 +412,5 @@ Resources:
           AssignPublicIp: ENABLED
         ExecutionRoleArn: !GetAtt DataPipeLineOperationRole.Arn
         JobRoleArn: !GetAtt DataPipeLineOperationRole.Arn
-      PlatformCapabilities: 
+      PlatformCapabilities:
         - FARGATE
