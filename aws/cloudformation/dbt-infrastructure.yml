@@ -70,7 +70,6 @@ Resources:
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
     Properties:
-      ManagedPolicyName: AthenaAccess
       PolicyDocument:
         Version: 2012-10-17
         Statement:
