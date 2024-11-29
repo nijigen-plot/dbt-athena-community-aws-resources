@@ -42,4 +42,4 @@ models:
       +ha: true
       +format: parquet
       +write_compression: snappy
-      +table_type: hive 
+      +table_type: hive
