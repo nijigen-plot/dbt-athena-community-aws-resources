@@ -36,4 +36,3 @@ jobs:
         run: |
           diff -q ./aws/cloudformation/cfn-template.yml /tmp/cfn-template.yml || (echo "cfn-template.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
           diff -q ./buildspec.yml /tmp/buildspec.yml || (echo "cfn-template.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
-

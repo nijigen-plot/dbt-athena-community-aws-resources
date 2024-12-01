@@ -2,7 +2,7 @@ import os
 
 from jinja2 import Environment, FileSystemLoader
 
-env = Environment(loader=FileSystemLoader('.'))
+env = Environment(loader=FileSystemLoader("."))
 
 # cloudformation yaml template
 cfn_template = env.get_template("./aws/cloudformation/dbt-infrastructure.j2.yml")
@@ -18,14 +18,12 @@ params = {
     "local_dev_assume_role_bearer_user_name": os.getenv(
         "LOCAL_DEV_ASSUME_ROLE_BEARER_USER_NAME"
     ),
-    "local_dev_role_name": os.getenv("LOCAL_DEV_ROLE_NAME")
+    "local_dev_role_name": os.getenv("LOCAL_DEV_ROLE_NAME"),
 }
 
 with open(
     f'{os.getenv("REPOSITORY_DIR")}/aws/cloudformation/dbt-infrastructure.yml', "w"
 ) as file:
     file.write(cfn_template.render(params))
-with open(
-    f'{os.getenv("REPOSITORY_DIR")}/buildspec.yml', "w"
-) as file:
+with open(f'{os.getenv("REPOSITORY_DIR")}/buildspec.yml', "w") as file:
     file.write(buildspec_template.render(params))
