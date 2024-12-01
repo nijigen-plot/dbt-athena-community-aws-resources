@@ -1,13 +1,13 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Create resources necessary for DWH operation
 Parameters:
-  QueryOutputLocation:
+  QueryOutputS3Bucket:
     Type: String
     Default: nijipro-query-results
-  DataPipelineResourceLocation:
+  DataPipelineResourceS3Bucket:
     Type: String
     Default: nijipro-dbt-resources
-  DbtTableResourceLocation:
+  DbtTableResourceS3Bucket:
     Type: String
     Default: nijigen-plot-dbt-tables
   DbtBatchParam:
@@ -76,8 +76,8 @@ Resources:
           - Action:
               - s3:*
             Resource:
-              - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceLocation}
-              - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceLocation}/*
+              - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceS3Bucket}
+              - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceS3Bucket}/*
               - arn:aws:s3:::quark-dbt-tables
               - arn:aws:s3:::quark-dbt-tables/*
             Effect: Allow
@@ -90,8 +90,8 @@ Resources:
               - s3:AbortMultipartUpload
               - s3:PutObject
             Resource:
-              - !Sub arn:${AWS::Partition}:s3:::${QueryOutputLocation}
-              - !Sub arn:${AWS::Partition}:s3:::${QueryOutputLocation}/*
+              - !Sub arn:${AWS::Partition}:s3:::${QueryOutputS3Bucket}
+              - !Sub arn:${AWS::Partition}:s3:::${QueryOutputS3Bucket}/*
             Effect: Allow
           - Action:
               - athena:StartQueryExecution
@@ -149,14 +149,14 @@ Resources:
       RecursiveDeleteOption: true
       WorkGroupConfiguration:
         ResultConfiguration:
-          OutputLocation: !Sub s3://${QueryOutputLocation}/
+          OutputLocation: !Sub s3://${QueryOutputS3Bucket}/
   # Lambda
   AWSServiceExecuteResultNotification:
     Type: AWS::Lambda::Function
     DeletionPolicy: Delete
     Properties:
       Code:
-        S3Bucket: !Sub ${DataPipelineResourceLocation}
+        S3Bucket: !Sub ${DataPipelineResourceS3Bucket}
         S3Key: lambda/aws_service_execute_result_notification.zip
         S3ObjectVersion: !Ref AWSServiceExecuteResultNotificationParam
       FunctionName: aws-service-execute-result-notification
@@ -172,7 +172,7 @@ Resources:
       StateMachineName: dbt-batch
       StateMachineType: STANDARD
       DefinitionS3Location:
-        Bucket: !Sub ${DataPipelineResourceLocation}
+        Bucket: !Sub ${DataPipelineResourceS3Bucket}
         Key: stepfunctions/dbt_batch.yml
         Version: !Ref DbtBatchParam
       RoleArn: !GetAtt DataPipeLineOperationRole.Arn
