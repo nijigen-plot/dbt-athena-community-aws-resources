@@ -32,10 +32,6 @@ jobs:
           mv aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml
           mv buildspec.yml /tmp/buildspec
           python script/jinja_render.py
-      - name: debug
-        run: |
-          cat aws/cloudformation/dbt-infrastructure.yml
-          cat /tmp/dbt-infrastructure.yml
       - name: jinja render check
         run: |
           diff -q aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml || (echo "dbt-infrastructure.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
