@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    data_pipeline_resource_s3_bucket: nijipro-dbt-resources
-    cloudformation_role_name: cloudformation-dbt-athena-community-resources-service-role
+    data_pipeline_resource_s3_bucket: {{ data_pipeline_resource_s3_bucket }}
+    cloudformation_role_name: {{ cloudformation_role_name }}
     dwh_stack_name: 'dbt-infrastructure'
 
 phases:

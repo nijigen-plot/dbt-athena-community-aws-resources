@@ -1,7 +1,7 @@
 #! /bin/bash
 
-# AWS_ACCOUNT_IDは.envrcで定義してください
-ROLE_ARN="arn:aws:iam::$AWS_ACCOUNT_ID:role/LocalDevelopmentAssumeRole"
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+ROLE_ARN="arn:aws:iam::$AWS_ACCOUNT_ID:role/$LOCAL_DEV_ROLE_NAME"
 SESSION_NAME="$AWS_PROFILE_NAME"
 PROFILE_NAME="$AWS_PROFILE_NAME"
 

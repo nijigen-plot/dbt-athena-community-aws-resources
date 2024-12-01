@@ -24,3 +24,22 @@ jobs:
       - name: Run pre-commit hooks
         run: |
           pre-commit run --all-files
+      - name: Install libraries and run jinja_render
+        run: |
+          pip install -U jinja2==3.1.4
+          mkdir -p ~/.local/bin
+          curl -sfL https://direnv.net/install.sh | bash
+          direnv allow
+      - name: Load PATH changes
+        run: direnv exec . sh -c 'echo $PATH' > "$GITHUB_PATH"
+      - name: Load other environment changes
+        run: direnv export gha >> "$GITHUB_ENV"
+      - name: Run jinja_render
+        run: |
+          mv aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml
+          mv buildspec.yml /tmp/buildspec.yml
+          python script/jinja_render.py
+      - name: jinja render check
+        run: |
+          diff aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml || (echo "dbt-infrastructure.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
+          diff buildspec.yml /tmp/buildspec.yml || (echo "buildspec.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
