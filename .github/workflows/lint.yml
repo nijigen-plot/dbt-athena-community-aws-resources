@@ -27,10 +27,12 @@ jobs:
       - name: Install libraries and run jinja_render
         run: |
           pip install -U jinja2==3.1.4
+          mkdir -p ~/.local/bin
           curl -sfL https://direnv.net/install.sh | bash
+          direnv allow
+      - name: Run jinja_render
+        run: |
           eval "$(direnv hook bash)"
-          source ~/.bashrc
-          direnv allow .
           mv aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml
           mv buildspec.yml /tmp/buildspec
           python script/jinja_render.py
