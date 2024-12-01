@@ -421,5 +421,7 @@ Resources:
             Value: nijigen-plot-dbt-tables
           - Name: QUERY_OUTPUT_S3_BUCKET
             Value: nijipro-query-results
+          - Name: AWS_PROFILE_NAME
+            Value: default
       PlatformCapabilities:
         - FARGATE
