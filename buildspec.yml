@@ -1,0 +1,47 @@
+version: 0.2
+
+env:
+  variables:
+    data_pipeline_resource_s3_bucket: nijipro-dbt-resources
+    cloudformation_role_name: cloudformation-dbt-athena-community-resources-service-role
+    dwh_stack_name: 'dbt-infrastructure'
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11.4
+    commands:
+      - python3 --version
+      - sudo apt-get update
+      - curl -sSf https://rye.astral.sh/get | RYE_NO_AUTO_INSTALL=1 RYE_INSTALL_OPTION="--yes" bash
+      - . "$HOME/.rye/env"
+      - rye --version
+      - rye sync --no-dev --no-lock
+  pre_build:
+    commands:
+      - aws --version
+      - aws s3 sync --exact-timestamps --delete aws/stepfunctions/ s3://$data_pipeline_resource_s3_bucket/stepfunctions/
+      - bash script/create_zip_files.sh
+      - AWSServiceExecuteResultNotificationParam=$(aws s3api list-object-versions --bucket $data_pipeline_resource_s3_bucket --prefix lambda/aws_service_execute_result_notification.zip | jq -r '.Versions[0].VersionId')
+      - DbtBatchParam=$(aws s3api list-object-versions --bucket $data_pipeline_resource_s3_bucket --prefix stepfunctions/dbt_batch.yml | jq -r '.Versions[0].VersionId')
+  build:
+    commands:
+      - ORIGINAL_DIR=$(pwd)
+      - echo "dbt Docker Image Build & Push"
+      - echo $AWS_ACCOUNT_ID
+      - docker build -t dbt-batch .
+      - >
+        aws ecr get-login-password --region ap-northeast-1 |
+        docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com
+      - docker tag dbt-batch:latest $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/dbt-batch:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/dbt-batch:latest
+      - cd $ORIGINAL_DIR
+  post_build:
+    commands:
+      - echo deploy data pipeline infrastructure
+      - aws cloudformation package --template-file aws/cloudformation/$dwh_stack_name.yml --s3-bucket $data_pipeline_resource_s3_bucket --s3-prefix cloudformation/package --output-template-file /tmp/$dwh_stack_name.yml --force-upload
+      - |
+        aws cloudformation deploy --no-fail-on-empty-changeset --template-file /tmp/$dwh_stack_name.yml --stack-name $dwh_stack_name --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/$cloudformation_role_name --capabilities CAPABILITY_NAMED_IAM CAPABILITY_IAM \
+        --parameter-overrides \
+        "AWSServiceExecuteResultNotificationParam=$AWSServiceExecuteResultNotificationParam" \
+        "DbtBatchParam=$DbtBatchParam" \

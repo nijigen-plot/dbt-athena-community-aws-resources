@@ -1,0 +1,427 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create resources necessary for DWH operation
+Parameters:
+  QueryOutputS3Bucket:
+    Type: String
+    Default: nijipro-query-results
+  DataPipelineResourceS3Bucket:
+    Type: String
+    Default: nijipro-dbt-resources
+  DbtTableResourceS3Bucket:
+    Type: String
+    Default: nijigen-plot-dbt-tables
+  SlackWebhookURLSecretsName:
+    Type: String
+    Default: secretmanager-read-slack-webhook-url
+  CloudFormationPolicyName:
+    Type: String
+    Default: cfn-nijipro-dbt-resources-create
+  DevLocalAssumeRoleBearerUserName:
+    Type: String
+    Default: Quark
+  DbtBatchParam:
+    Type: String
+    Default: default
+  AWSServiceExecuteResultNotificationParam:
+    Type: String
+    Default: default
+  CidrBlock:
+    Description: Please type the CidrBlock.
+    Type: String
+    Default: 192.168.0.0/22
+
+Resources:
+  # IAM Role
+  DataPipeLineOperationRole:
+    Type: AWS::IAM::Role
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      RoleName: DataPipeLineOperationRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - states.amazonaws.com
+                - scheduler.amazonaws.com
+                - sns.amazonaws.com
+                - glue.amazonaws.com
+                - lambda.amazonaws.com
+                - events.amazonaws.com
+                - batch.amazonaws.com
+                - ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/${SlackWebhookURLSecretsName}
+        - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/${CloudFormationPolicyName}
+        - !Ref AthenaAccess
+  LocalDevelopmentAssumeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LocalDevelopmentAssumeRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:user/${DevLocalAssumeRoleBearerUserName}
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Ref AthenaAccess
+  AthenaAccess:
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - s3:*
+            Resource:
+              - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceS3Bucket}
+              - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceS3Bucket}/*
+              - arn:aws:s3:::quark-dbt-tables
+              - arn:aws:s3:::quark-dbt-tables/*
+            Effect: Allow
+          - Action:
+              - s3:GetBucketLocation
+              - s3:GetObject
+              - s3:ListBucket
+              - s3:ListBucketMultipartUploads
+              - s3:ListMultipartUploadParts
+              - s3:AbortMultipartUpload
+              - s3:PutObject
+            Resource:
+              - !Sub arn:${AWS::Partition}:s3:::${QueryOutputS3Bucket}
+              - !Sub arn:${AWS::Partition}:s3:::${QueryOutputS3Bucket}/*
+            Effect: Allow
+          - Action:
+              - athena:StartQueryExecution
+              - athena:GetQueryResults
+              - athena:DeleteNamedQuery
+              - athena:GetNamedQuery
+              - athena:ListQueryExecutions
+              - athena:StopQueryExecution
+              - athena:GetQueryResultsStream
+              - athena:ListNamedQueries
+              - athena:CreateNamedQuery
+              - athena:GetQueryExecution
+              - athena:BatchGetNamedQuery
+              - athena:BatchGetQueryExecution
+              - athena:UpdateWorkGroup
+              - athena:GetWorkGroup
+              - athena:CreatePreparedStatement
+              - athena:DeletePreparedStatement
+              - athena:GetPreparedStatement
+              - athena:UpdatePreparedStatement
+            Resource:
+              - !Sub arn:${AWS::Partition}:athena:ap-northeast-1:${AWS::AccountId}:workgroup/${AthenaDbtWorkgroup}
+            Effect: Allow
+          - Action:
+              - glue:Get*
+              - glue:Create*
+              - glue:Delete*
+              - glue:Describe*
+              - glue:List*
+              - glue:SearchTables
+              - glue:Update*
+            Resource:
+              - !Sub arn:${AWS::Partition}:glue:ap-northeast-1:${AWS::AccountId}:catalog
+              - !Sub arn:${AWS::Partition}:glue:ap-northeast-1:${AWS::AccountId}:database/*
+              - !Sub arn:${AWS::Partition}:glue:ap-northeast-1:${AWS::AccountId}:table/*
+            Effect: Allow
+          - Action:
+              - athena:GetDataCatalog
+              - athena:GetDatabase
+              - athena:GetTableMetadata
+              - athena:ListDatabases
+              - athena:ListTableMetadata
+              - athena:UpdateDataCatalog
+            Resource: !Sub arn:${AWS::Partition}:athena:ap-northeast-1:${AWS::AccountId}:datacatalog/*
+            Effect: Allow
+  # Athena
+  AthenaDbtWorkgroup:
+    Type: AWS::Athena::WorkGroup
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Description: workgroup for access from dbt
+      Name: dbt
+      State: ENABLED
+      RecursiveDeleteOption: true
+      WorkGroupConfiguration:
+        ResultConfiguration:
+          OutputLocation: !Sub s3://${QueryOutputS3Bucket}/
+  # Lambda
+  AWSServiceExecuteResultNotification:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Delete
+    Properties:
+      Code:
+        S3Bucket: !Sub ${DataPipelineResourceS3Bucket}
+        S3Key: lambda/aws_service_execute_result_notification.zip
+        S3ObjectVersion: !Ref AWSServiceExecuteResultNotificationParam
+      FunctionName: aws-service-execute-result-notification
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt DataPipeLineOperationRole.Arn
+      Runtime: python3.10
+      Timeout: 60
+      MemorySize: 128
+  # StepFunctions
+  DbtBatch:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: dbt-batch
+      StateMachineType: STANDARD
+      DefinitionS3Location:
+        Bucket: !Sub ${DataPipelineResourceS3Bucket}
+        Key: stepfunctions/dbt_batch.yml
+        Version: !Ref DbtBatchParam
+      RoleArn: !GetAtt DataPipeLineOperationRole.Arn
+  # EventBridge Scheduler
+  DBTFunctionsDailyExecute:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Description: Athena Table Transform with DBT Daily Execution
+      Name: DBTFunctionsDailyExecute
+      FlexibleTimeWindow:
+        Mode: FLEXIBLE
+        MaximumWindowInMinutes: 15
+      ScheduleExpression: cron(0 23 * * ? *)
+      Target:
+        Arn: !Ref DbtBatch
+        RoleArn: !GetAtt DataPipeLineOperationRole.Arn
+        Input: |
+          {
+          }
+  # EventBridge Rule
+  StepFunctionsExecutionResultNotification:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: StepFunctionsExecutionResultCatch
+      Description: Catch a StepFunctions Execution Result.
+      EventPattern:
+        source:
+          - aws.states
+        detail-type:
+          - Step Functions Execution Status Change
+        detail:
+          status:
+            - SUCCEEDED
+            - FAILED
+            - TIMED_OUT
+          stateMachineArn:
+            - !Ref DbtBatch
+      State: ENABLED
+      Targets:
+        - Arn: !Ref ExecutionToLambda
+          Id: StepFunctionsExecutionResultNotification
+          InputTransformer:
+            InputPathsMap:
+              account: $.account
+              detail: $.detail
+              detail-executionArn: $.detail.executionArn
+              detail-input: $.detail.input
+              detail-output: $.detail.output
+              detail-name: $.detail.name
+              detail-status: $.detail.status
+              detail-type: $.detail-type
+              id: $.id
+              region: $.region
+              source: $.source
+              time: $.time
+              version: $.version
+            InputTemplate: |
+              {
+                  "version": <version>,
+                  "id": <id>,
+                  "detail":<detail>,
+                  "detail-type": "[<detail-status>] <detail-type>",
+                  "source": <source>,
+                  "account": <account>,
+                  "time": <time>,
+                  "region": <region>,
+                  "resources": [
+                      "https://<region>.console.aws.amazon.com/states/home?region=<region>#/executions/details/<detail-executionArn>",<detail-input>,<detail-output>
+                  ]
+              }
+  AthenaQueryResultNotification:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: AthenaExecutionResultCatch
+      Description: Catch a Athena Execution Result.
+      EventPattern:
+        source:
+          - aws.athena
+        detail-type:
+          - Athena Query State Change
+        detail:
+          currentState:
+            - FAILED
+          workgroupName:
+            - automation
+      State: ENABLED
+      Targets:
+        - Arn: !Ref ExecutionToLambda
+          Id: AthenaQueryResultNotification
+  # Amazon SNS Topic
+  ExecutionToLambda:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: AWSServiceExecuteResultNotification
+      DisplayName: AWSServiceExecuteResultNotification
+      FifoTopic: false
+  # Amazon SNS Topic Policy
+  ExecutionToLambdaPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref ExecutionToLambda
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AWSServiceExecuteResultNotification
+            Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref ExecutionToLambda
+  # SNS Subscription
+  ExecutionToLambdaSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref ExecutionToLambda
+      Protocol: lambda
+      Endpoint: !GetAtt AWSServiceExecuteResultNotification.Arn
+  # SNS Lambda Permission
+  ExecutionToLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref AWSServiceExecuteResultNotification
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref ExecutionToLambda
+  # VPCまわり
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Sub ${CidrBlock}
+      EnableDnsSupport: True
+      EnableDnsHostnames: True
+      InstanceTenancy: default
+      Tags:
+      - Key: Name
+        Value: dbt-batch-VPC
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Application
+        Value: !Ref AWS::StackId
+      - Key: Network
+        Value: Public
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    DependsOn: AttachGateway
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: dbt-batch-public-rtb
+      - Key: Application
+        Value: !Ref AWS::StackId
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs ]
+      CidrBlock: !Select [ 0, !Cidr [ !GetAtt VPC.CidrBlock, 4, 8 ]]
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet
+      RouteTableId: !Ref PublicRouteTable
+  DbtBatchSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Marker security group for Application server.
+      Tags:
+      - Key: Name
+        Value: dbt-batch-sg
+  # Batch
+  BatchComputeEnvironment:
+    Type: AWS::Batch::ComputeEnvironment
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Type: MANAGED
+      ServiceRole: !GetAtt DataPipeLineOperationRole.Arn
+      ComputeEnvironmentName: dbt-batch-compute-env
+      ComputeResources:
+        Subnets:
+          - !Ref Subnet
+        Type: FARGATE
+        InstanceTypes: []
+        Ec2Configuration: []
+        SecurityGroupIds:
+          - !Ref DbtBatchSecurityGroup
+        MaxvCpus: 16
+      State: ENABLED
+  BatchJobQueue:
+    Type: AWS::Batch::JobQueue
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      ComputeEnvironmentOrder:
+        - ComputeEnvironment: !Ref BatchComputeEnvironment
+          Order: 1
+      Priority: 500
+      State: ENABLED
+      JobQueueName: dbt-batch-job-queue
+  BatchJobDefinition:
+    Type: AWS::Batch::JobDefinition
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      JobDefinitionName: dbt-batch-job-definition
+      Type: container
+      ContainerProperties:
+        Command:
+          - echo
+          - "Hello World!"
+        Image: !Sub ${AWS::AccountId}.dkr.ecr.ap-northeast-1.amazonaws.com/dbt-batch:latest
+        ResourceRequirements:
+          - Type: VCPU
+            Value: "1"
+          - Type: MEMORY
+            Value: "2048"
+        NetworkConfiguration:
+          AssignPublicIp: ENABLED
+        ExecutionRoleArn: !GetAtt DataPipeLineOperationRole.Arn
+        JobRoleArn: !GetAtt DataPipeLineOperationRole.Arn
+        Environment:
+          - Name: DBT_TABLE_RESOURCE_S3_BUCKET
+            Value: nijigen-plot-dbt-tables
+          - Name: QUERY_OUTPUT_S3_BUCKET
+            Value: nijipro-query-results
+          - Name: AWS_PROFILE_NAME
+            Value: default
+      PlatformCapabilities:
+        - FARGATE
