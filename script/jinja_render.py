@@ -22,8 +22,8 @@ params = {
 }
 
 with open(
-    f'{os.getenv("REPOSITORY_DIR")}/aws/cloudformation/dbt-infrastructure.yml', "w"
+    f'{os.getenv("REPOSITORY_DIR", os.path.expanduser("~"))}/aws/cloudformation/dbt-infrastructure.yml', "w"
 ) as file:
     file.write(cfn_template.render(params))
-with open(f'{os.getenv("REPOSITORY_DIR")}/buildspec.yml', "w") as file:
+with open(f'{os.getenv("REPOSITORY_DIR", os.path.expanduser("~"))}/buildspec.yml', "w") as file:
     file.write(buildspec_template.render(params))
