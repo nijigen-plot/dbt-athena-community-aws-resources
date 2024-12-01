@@ -36,10 +36,10 @@ jobs:
         run: direnv export gha >> "$GITHUB_ENV"
       - name: Run jinja_render
         run: |
-          eval "$(direnv hook bash)"
           mv aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml
           mv buildspec.yml /tmp/buildspec
           python script/jinja_render.py
       - name: jinja render check
         run: |
           diff aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml || (echo "dbt-infrastructure.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
+          diff buildspec.yml /tmp/buildspec.yml || (echo "buildspec.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
