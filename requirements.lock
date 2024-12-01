@@ -92,6 +92,7 @@ isodate==0.6.1
     # via agate
     # via dbt-common
 jinja2==3.1.4
+    # via dbt-athena-community-aws-resources
     # via dbt-common
     # via dbt-core
     # via dbt-semantic-interfaces
