@@ -315,7 +315,7 @@ Resources:
       InstanceTenancy: default
       Tags:
       - Key: Name
-        Value: bt-batch-VPC
+        Value: dbt-batch-VPC
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
@@ -416,5 +416,10 @@ Resources:
           AssignPublicIp: ENABLED
         ExecutionRoleArn: !GetAtt DataPipeLineOperationRole.Arn
         JobRoleArn: !GetAtt DataPipeLineOperationRole.Arn
+        Environment:
+          - Name: DBT_TABLE_RESOURCE_S3_BUCKET
+            Value: nijigen-plot-dbt-tables
+          - Name: QUERY_OUTPUT_S3_BUCKET
+            Value: nijipro-query-results
       PlatformCapabilities:
         - FARGATE
