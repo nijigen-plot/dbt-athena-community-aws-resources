@@ -6,7 +6,11 @@ repos:
       - id: trailing-whitespace
       - id: check-json
       - id: check-yaml
-        exclude: ^(aws/cloudformation/.*\.yml$)
+        exclude: |
+          (?x)^(
+            ^(aws/cloudformation/.*\.yml$) |
+            ^(buildspec\.j2\.yml$)
+          )$
       - id: detect-private-key
       - id: debug-statements
   - repo: https://github.com/shellcheck-py/shellcheck-py
