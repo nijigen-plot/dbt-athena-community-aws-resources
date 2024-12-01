@@ -24,3 +24,16 @@ jobs:
       - name: Run pre-commit hooks
         run: |
           pre-commit run --all-files
+      - name: Install jinja2
+        run: |
+          pip install -U jinja2==3.1.4
+      - name: Run jinja render script
+        run: |
+          mv ./aws/cloudformation/cfn-template.yml /tmp/cfn-template.yml
+          mv ./buildspec.yml /tmp/buildspec
+          python ./scrpt/jinja_render.py
+      - name: jinja render check
+        run: |
+          diff -q ./aws/cloudformation/cfn-template.yml /tmp/cfn-template.yml || (echo "cfn-template.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
+          diff -q ./buildspec.yml /tmp/buildspec.yml || (echo "cfn-template.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
+
