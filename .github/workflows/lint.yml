@@ -37,7 +37,7 @@ jobs:
       - name: Run jinja_render
         run: |
           mv aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml
-          mv buildspec.yml /tmp/buildspec
+          mv buildspec.yml /tmp/buildspec.yml
           python script/jinja_render.py
       - name: jinja render check
         run: |
