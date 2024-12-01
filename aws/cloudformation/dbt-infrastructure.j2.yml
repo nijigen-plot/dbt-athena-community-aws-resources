@@ -3,22 +3,22 @@ Description: Create resources necessary for DWH operation
 Parameters:
   QueryOutputS3Bucket:
     Type: String
-    Default: nijipro-query-results
+    Default: {{ query_output_s3_bucket }}
   DataPipelineResourceS3Bucket:
     Type: String
-    Default: nijipro-dbt-resources
+    Default: {{ data_pipeline_resource_s3_bucket }}
   DbtTableResourceS3Bucket:
     Type: String
-    Default: nijigen-plot-dbt-tables
+    Default: {{ dbt_table_resource_s3_bucket }}
   SlackWebhookURLSecretsName:
     Type: String
-    Default: secretmanager-read-slack-webhook-url
+    Default: {{ slack_webhook_url_secrets_name }}
   CloudFormationPolicyName:
     Type: String
-    Default: cfn-nijipro-dbt-resources-create
+    Default: {{ cloudformation_policy_name }}
   DevLocalAssumeRoleBearerUserName:
     Type: String
-    Default: Quark
+    Default: {{ dev_local_assume_role_bearer_user_name }}
   DbtBatchParam:
     Type: String
     Default: default
@@ -418,9 +418,9 @@ Resources:
         JobRoleArn: !GetAtt DataPipeLineOperationRole.Arn
         Environment:
           - Name: DBT_TABLE_RESOURCE_S3_BUCKET
-            Value: nijigen-plot-dbt-tables
+            Value: {{ dbt_table_resource_s3_bucket }}
           - Name: QUERY_OUTPUT_S3_BUCKET
-            Value: nijipro-query-results
+            Value: {{ query_output_s3_bucket }}
           - Name: AWS_PROFILE_NAME
             Value: default
       PlatformCapabilities:
