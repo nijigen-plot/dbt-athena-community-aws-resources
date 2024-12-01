@@ -24,13 +24,12 @@ jobs:
       - name: Run pre-commit hooks
         run: |
           pre-commit run --all-files
-      - name: Install jinja2 and direnv
+      - name: Install libraries and run jinja_render
         run: |
           pip install -U jinja2==3.1.4
-          pip install -U direnv
+          curl -sfL https://direnv.net/install.sh | bash
+          eval "$(direnv hook bash)"
           direnv allow .
-      - name: Run jinja render script
-        run: |
           mv aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml
           mv buildspec.yml /tmp/buildspec
           python script/jinja_render.py
