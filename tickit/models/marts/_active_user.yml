@@ -5,7 +5,7 @@ models:
       - name: calendar_date
         description: ''
         data_type: date
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: user_count
