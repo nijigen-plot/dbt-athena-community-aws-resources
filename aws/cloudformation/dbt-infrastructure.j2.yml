@@ -18,7 +18,7 @@ Parameters:
     Default: {{ cloudformation_policy_name }}
   DevLocalAssumeRoleBearerUserName:
     Type: String
-    Default: {{ dev_local_assume_role_bearer_user_name }}
+    Default: {{ local_dev_assume_role_bearer_user_name }}
   DbtBatchParam:
     Type: String
     Default: default

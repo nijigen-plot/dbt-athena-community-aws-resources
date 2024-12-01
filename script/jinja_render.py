@@ -15,8 +15,8 @@ params = {
     "slack_webhook_url_secrets_name": os.getenv("SLACK_WEBHOOK_URL_SECRETS_NAME"),
     "cloudformation_policy_name": os.getenv("CLOUDFORMATION_POLICY_NAME"),
     "cloudformation_role_name": os.getenv("CLOUDFORMATION_ROLE_NAME"),
-    "dev_local_assume_role_bearer_user_name": os.getenv(
-        "DEV_LOCAL_ASSUME_ROLE_BEARER_USER_NAME"
+    "local_dev_assume_role_bearer_user_name": os.getenv(
+        "LOCAL_DEV_ASSUME_ROLE_BEARER_USER_NAME"
     ),
 }
 
