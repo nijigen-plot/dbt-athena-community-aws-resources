@@ -29,6 +29,7 @@ jobs:
           pip install -U jinja2==3.1.4
           curl -sfL https://direnv.net/install.sh | bash
           eval "$(direnv hook bash)"
+          source ~/.bashrc
           direnv allow .
           mv aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml
           mv buildspec.yml /tmp/buildspec
