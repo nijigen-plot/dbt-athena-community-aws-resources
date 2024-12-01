@@ -18,6 +18,7 @@ params = {
     "local_dev_assume_role_bearer_user_name": os.getenv(
         "LOCAL_DEV_ASSUME_ROLE_BEARER_USER_NAME"
     ),
+    "local_dev_role_name": os.getenv("LOCAL_DEV_ROLE_NAME")
 }
 
 with open(

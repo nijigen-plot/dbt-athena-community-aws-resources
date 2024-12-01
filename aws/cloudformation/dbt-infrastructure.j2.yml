@@ -16,9 +16,12 @@ Parameters:
   CloudFormationPolicyName:
     Type: String
     Default: {{ cloudformation_policy_name }}
-  DevLocalAssumeRoleBearerUserName:
+  LocalDevAssumeRoleBearerUserName:
     Type: String
     Default: {{ local_dev_assume_role_bearer_user_name }}
+  LocalDevRoleName:
+    Type: String
+    Default: {{ local_dev_role_name }}
   DbtBatchParam:
     Type: String
     Default: default
@@ -60,14 +63,14 @@ Resources:
   LocalDevelopmentAssumeRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: LocalDevelopmentAssumeRole
+      RoleName: !Sub ${LocalDevRoleName}
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
               AWS:
-                - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:user/${DevLocalAssumeRoleBearerUserName}
+                - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:user/${LocalDevAssumeRoleBearerUserName}
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - !Ref AthenaAccess
