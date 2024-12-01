@@ -315,7 +315,7 @@ Resources:
       InstanceTenancy: default
       Tags:
       - Key: Name
-        Value: !Sub dbt-batch-VPC
+        Value: dbt-batch-VPC
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
@@ -336,8 +336,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: !Sub |
-          dbt-batch-public-rtb
+        Value: dbt-batch-public-rtb
       - Key: Application
         Value: !Ref AWS::StackId
   PublicRoute:
@@ -365,8 +364,7 @@ Resources:
       GroupDescription: Marker security group for Application server.
       Tags:
       - Key: Name
-        Value: !Sub |
-          dbt-batch-sg
+        Value: dbt-batch-sg
   # Batch
   BatchComputeEnvironment:
     Type: AWS::Batch::ComputeEnvironment
@@ -418,5 +416,10 @@ Resources:
           AssignPublicIp: ENABLED
         ExecutionRoleArn: !GetAtt DataPipeLineOperationRole.Arn
         JobRoleArn: !GetAtt DataPipeLineOperationRole.Arn
+        Environment:
+          - Name: DBT_TABLE_RESOURCE_S3_BUCKET
+            Value: {{ dbt_table_resource_s3_bucket }}
+          - Name: QUERY_OUTPUT_S3_BUCKET
+            Value: {{ query_output_s3_bucket }}
       PlatformCapabilities:
         - FARGATE
