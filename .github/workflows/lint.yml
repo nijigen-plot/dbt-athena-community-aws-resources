@@ -24,9 +24,11 @@ jobs:
       - name: Run pre-commit hooks
         run: |
           pre-commit run --all-files
-      - name: Install jinja2
+      - name: Install jinja2 and direnv
         run: |
           pip install -U jinja2==3.1.4
+          pip install -U direnv
+          direnv allow .
       - name: Run jinja render script
         run: |
           mv aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml
