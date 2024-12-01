@@ -11,5 +11,5 @@ models:
       - name: commission
         description: ''
         data_type: decimal(38,2)
-        tests:
+        data_tests:
           - not_null

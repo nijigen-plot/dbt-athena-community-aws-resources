@@ -3,13 +3,13 @@ tickit:
     prod:
       database: awsdatacatalog
       region_name: ap-northeast-1
-      s3_data_dir: s3://nijigen-plot-dbt-tables
-      s3_staging_dir: s3://aws-athena-query-results-875141268485-ap-northeast-1
+      s3_data_dir: "s3://{{ env_var('DBT_TABLE_RESOURCE_S3_BUCKET') }}"
+      s3_staging_dir: "s3://{{ env_var('QUERY_OUTPUT_S3_BUCKET') }}"
       schema: tickit
       threads: 3
       type: athena
       work_group: dbt
       num_retries: 0
       num_boto3_retries: 1
-      aws_profile_name: dbt-local
+      aws_profile_name: "{{ env_var('AWS_PROFILE_NAME') }}"
   target: prod
