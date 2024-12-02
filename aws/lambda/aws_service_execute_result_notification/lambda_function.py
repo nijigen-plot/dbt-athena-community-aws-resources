@@ -1,4 +1,5 @@
-import json  # loggerにする
+import json
+import os
 
 import boto3
 import urllib3
@@ -9,7 +10,7 @@ http = urllib3.PoolManager()
 
 def get_secret():
 
-    secret_name = "slack-webhook-url"
+    secret_name = os.getenv("SLACK_WEBHOOK_URL_SECRETS_NAME")
     region_name = "ap-northeast-1"
 
     # Create a Secrets Manager client
@@ -135,7 +136,7 @@ def glue_job_notification(event_msg: dict, url: str, channel_name: str):
             {
                 "type": "section",
                 "text": {
-                    "type": "mrkdwn",  # https://ap-northeast-1.console.aws.amazon.com/gluestudio/home?region=ap-northeast-1#/editor/job/store_report_spotify/runs
+                    "type": "mrkdwn",
                     "text": f'[FAILED] :information_source: *<https://{event_msg["region"]}.console.aws.amazon.com/gluestudio/home?region={event_msg["region"]}#/editor/job/{event_msg["detail"]["jobName"]}/runs| {event_msg["detail-type"]} | {event_msg["region"]} | Account: {event_msg["account"]}>*',
                 },
             },
@@ -246,23 +247,18 @@ def athena_notification(event_msg: dict, url: str, channel_name: str):
 
 
 def lambda_handler(event, context):
-    url = json.loads(get_secret())["general"]
-    channel_name = "#general"
-    event_message = json.loads(
-        event["Records"][0]["Sns"]["Message"]
-    )  # Athenaの場合あとで.strip('"')する
-
-    # テスト動作させるときと実際のイベントでは中身jsonだったりstrだったりかわるので対処
+    channel_name = os.getenv("SLACK_WEBHOOK_URL_CHANNEL_NAME")
+    url = json.loads(get_secret())[channel_name]
+    event_message = json.loads(event["Records"][0]["Sns"]["Message"])
     if type(event_message) == str:
         event_message = json.loads(event_message)
-    # 各種サービスごとに分岐させる
     source = event_message["source"]
     if source == "aws.states":
-        states_notification(event_message, url, channel_name)
+        states_notification(event_message, url, f"#{channel_name}")
     elif source == "aws.athena":
-        athena_notification(event_message, url, channel_name)
+        athena_notification(event_message, url, f"#{channel_name}")
     elif source == "aws.glue":
-        glue_job_notification(event_message, url, channel_name)
+        glue_job_notification(event_message, url, f"#{channel_name}")
     else:
         print("sourceに対するイベントを受け取る実装ができていません。")
         print(f"source name = {source}")

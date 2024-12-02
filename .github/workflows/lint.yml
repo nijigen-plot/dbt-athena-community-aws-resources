@@ -38,8 +38,10 @@ jobs:
         run: |
           mv aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml
           mv buildspec.yml /tmp/buildspec.yml
+          mv aws/stepfunctions/dbt_batch.yml /tmp/dbt_batch.yml
           python script/jinja_render.py
       - name: jinja render check
         run: |
           diff aws/cloudformation/dbt-infrastructure.yml /tmp/dbt-infrastructure.yml || (echo "dbt-infrastructure.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
           diff buildspec.yml /tmp/buildspec.yml || (echo "buildspec.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
+          diff aws/stepfunctions/dbt_batch.yml /tmp/dbt_batch.yml || (echo "dbt_batch.yml is out of date. Run 'rye run python ./script/jinja_render.py' to update it." && exit 1)
