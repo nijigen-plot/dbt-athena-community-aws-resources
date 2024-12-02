@@ -2,9 +2,9 @@ version: 0.2
 
 env:
   variables:
-    data_pipeline_resource_s3_bucket: {{ data_pipeline_resource_s3_bucket }}
-    cloudformation_role_name: {{ cloudformation_role_name }}
-    dwh_stack_name: 'dbt-infrastructure'
+    DATA_PIPELINE_RESOURCE_S3_BUCKET: {{ data_pipeline_resource_s3_bucket }}
+    CLOUDFORMATION_ROLE_NAME: {{ cloudformation_role_name }}
+    DWH_STACK_NAME: 'dbt-infrastructure'
 
 phases:
   install:
@@ -20,10 +20,10 @@ phases:
   pre_build:
     commands:
       - aws --version
-      - aws s3 sync --exact-timestamps --delete aws/stepfunctions/ s3://$data_pipeline_resource_s3_bucket/stepfunctions/
+      - aws s3 sync --exact-timestamps --delete aws/stepfunctions/ s3://$DATA_PIPELINE_RESOURCE_S3_BUCKET/stepfunctions/
       - bash script/create_zip_files.sh
-      - AWSServiceExecuteResultNotificationParam=$(aws s3api list-object-versions --bucket $data_pipeline_resource_s3_bucket --prefix lambda/aws_service_execute_result_notification.zip | jq -r '.Versions[0].VersionId')
-      - DbtBatchParam=$(aws s3api list-object-versions --bucket $data_pipeline_resource_s3_bucket --prefix stepfunctions/dbt_batch.yml | jq -r '.Versions[0].VersionId')
+      - AWSServiceExecuteResultNotificationParam=$(aws s3api list-object-versions --bucket $DATA_PIPELINE_RESOURCE_S3_BUCKET --prefix lambda/aws_service_execute_result_notification.zip | jq -r '.Versions[0].VersionId')
+      - DbtBatchParam=$(aws s3api list-object-versions --bucket $DATA_PIPELINE_RESOURCE_S3_BUCKET --prefix stepfunctions/dbt_batch.yml | jq -r '.Versions[0].VersionId')
   build:
     commands:
       - ORIGINAL_DIR=$(pwd)
@@ -39,9 +39,9 @@ phases:
   post_build:
     commands:
       - echo deploy data pipeline infrastructure
-      - aws cloudformation package --template-file aws/cloudformation/$dwh_stack_name.yml --s3-bucket $data_pipeline_resource_s3_bucket --s3-prefix cloudformation/package --output-template-file /tmp/$dwh_stack_name.yml --force-upload
+      - aws cloudformation package --template-file aws/cloudformation/$DWH_STACK_NAME.yml --s3-bucket $DATA_PIPELINE_RESOURCE_S3_BUCKET --s3-prefix cloudformation/package --output-template-file /tmp/$DWH_STACK_NAME.yml --force-upload
       - |
-        aws cloudformation deploy --no-fail-on-empty-changeset --template-file /tmp/$dwh_stack_name.yml --stack-name $dwh_stack_name --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/$cloudformation_role_name --capabilities CAPABILITY_NAMED_IAM CAPABILITY_IAM \
+        aws cloudformation deploy --no-fail-on-empty-changeset --template-file /tmp/$DWH_STACK_NAME.yml --stack-name $DWH_STACK_NAME --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/$CLOUDFORMATION_ROLE_NAME --capabilities CAPABILITY_NAMED_IAM CAPABILITY_IAM \
         --parameter-overrides \
         "AWSServiceExecuteResultNotificationParam=$AWSServiceExecuteResultNotificationParam" \
         "DbtBatchParam=$DbtBatchParam" \
