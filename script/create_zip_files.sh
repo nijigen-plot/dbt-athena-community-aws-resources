@@ -12,4 +12,4 @@ for dir in */; do
     zip -r -j "${WORKDIR}$(basename "${dir}").zip" "${dir}lambda_function.py"
 done
 
-aws s3 sync --exact-timestamps --delete ${WORKDIR} s3://${DATA_PIPELINE_RESOURCE_S3_BUCKET}/lambda/
+aws s3 sync --exact-timestamps --delete ${WORKDIR} s3://"${DATA_PIPELINE_RESOURCE_S3_BUCKET}"/lambda/
