@@ -249,9 +249,7 @@ def athena_notification(event_msg: dict, url: str, channel_name: str):
 def lambda_handler(event, context):
     channel_name = os.getenv("SLACK_WEBHOOK_URL_CHANNEL_NAME")
     url = json.loads(get_secret())[channel_name]
-    event_message = json.loads(
-        event["Records"][0]["Sns"]["Message"]
-    )
+    event_message = json.loads(event["Records"][0]["Sns"]["Message"])
     if type(event_message) == str:
         event_message = json.loads(event_message)
     source = event_message["source"]

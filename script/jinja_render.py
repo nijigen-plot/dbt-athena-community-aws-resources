@@ -33,5 +33,7 @@ with open(
 ) as file:
     file.write(buildspec_template.render(params) + "\n")
 with open(
-    f'{os.getenv("REPOSITORY_DIR", os.path.expanduser("."))}/aws/stepfunctions/dbt_batch.yml', "w") as file:
+    f'{os.getenv("REPOSITORY_DIR", os.path.expanduser("."))}/aws/stepfunctions/dbt_batch.yml',
+    "w",
+) as file:
     file.write(stepfunctions_template.render(params) + "\n")
