@@ -13,6 +13,9 @@ Parameters:
   SlackWebhookURLSecretsName:
     Type: String
     Default: {{ slack_webhook_url_secrets_name }}
+  SlackWebhookURLChannelName:
+    Type: String
+    Default: {{ slack_webhook_url_channel_name }}
   CloudFormationPolicyName:
     Type: String
     Default: {{ cloudformation_policy_name }}
@@ -74,6 +77,20 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - !Ref AthenaAccess
+  # IAM Policy
+  SlackWebhookURLSecrets:
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - secretsmanager:GetSecretValue
+            Resource:
+              - !Sub arn:${AWS::Partition}:secretsmanager:ap-northeast-1:${AWS::AccountId}:secret:${SlackWebhookURLSecretsName}-??????
+            Effect: Allow
   AthenaAccess:
     Type: AWS::IAM::ManagedPolicy
     DeletionPolicy: Delete
@@ -87,8 +104,6 @@ Resources:
             Resource:
               - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceS3Bucket}
               - !Sub arn:${AWS::Partition}:s3:::${DbtTableResourceS3Bucket}/*
-              - arn:aws:s3:::quark-dbt-tables
-              - arn:aws:s3:::quark-dbt-tables/*
             Effect: Allow
           - Action:
               - s3:GetBucketLocation
@@ -174,6 +189,10 @@ Resources:
       Runtime: python3.10
       Timeout: 60
       MemorySize: 128
+      Environment:
+        Variables:
+          SLACK_WEBHOOK_URL_SECRETS_NAME: !Sub ${SlackWebhookURLSecretsName}
+          SLACK_WEBHOOK_URL_CHANNEL_NAME: !Sub ${SlackWebhookURLChannelName}
   # StepFunctions
   DbtBatch:
     Type: AWS::StepFunctions::StateMachine
