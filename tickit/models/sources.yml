@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: tickit
     database: awsdatacatalog
-    schema: dbt-datalake
+    schema: tickit
     tables:
       - name: category
         columns:
