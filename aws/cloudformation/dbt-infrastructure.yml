@@ -60,8 +60,8 @@ Resources:
                 - ecs-tasks.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/${SlackWebhookURLSecretsName}
         - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/${CloudFormationPolicyName}
+        - !Ref SlackWebhookURLSecrets
         - !Ref AthenaAccess
   LocalDevelopmentAssumeRole:
     Type: AWS::IAM::Role
