@@ -10,4 +10,4 @@ SELECT
     , commission
     , saletime as sale_time
 FROM
-    {{ source('tickit','sales')}}
+    {{ ref('sales_tab') }}
