@@ -30,6 +30,13 @@ RUN echo 'source "$HOME/.rye/env"' >> /root/.bashrc
 
 # dbt環境の構築
 COPY ./tickit/ tickit/
+RUN touch tickit/seeds/allevents_pipe.csv && \
+    touch tickit/seeds/allusers_pipe.csv && \
+    touch tickit/seeds/category_pipe.csv && \
+    touch tickit/seeds/date2008_pipe.csv && \
+    touch tickit/seeds/listings_pipe.csv && \
+    touch tickit/seeds/sales_tab.csv && \
+    touch tickit/seeds/venue_pipe.csv
 COPY ./dbt_project.yml dbt_project.yml
 COPY ./.dbt/profiles.yml /root/.dbt/profiles.yml
 COPY ./generate_static_html.py generate_static_html.py
