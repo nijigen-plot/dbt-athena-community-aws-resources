@@ -29,6 +29,7 @@ RUN curl -sSf https://rye.astral.sh/get | RYE_NO_AUTO_INSTALL=1 RYE_INSTALL_OPTI
 RUN echo 'source "$HOME/.rye/env"' >> /root/.bashrc
 
 # dbt環境の構築
+COPY ./tickit/ tickit/
 COPY ./dbt_project.yml dbt_project.yml
 COPY ./.dbt/profiles.yml /root/.dbt/profiles.yml
 COPY ./generate_static_html.py generate_static_html.py
