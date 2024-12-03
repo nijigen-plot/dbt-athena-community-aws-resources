@@ -6,4 +6,4 @@ SELECT
     , eventname as event_name
     , starttime as start_time
 FROM
-    {{ source('tickit','event')}}
+    {{ ref('allevents_pipe') }}

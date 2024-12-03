@@ -43,3 +43,5 @@ models:
       +format: parquet
       +write_compression: snappy
       +table_type: hive
+seeds:
+  +quote_columns: false

@@ -5,4 +5,4 @@ SELECT
     , venuestate as venue_state
     , venueseats as venue_seats
 FROM
-    {{source('tickit','venue')}}
+    {{ ref('venue_pipe') }}

@@ -4,4 +4,4 @@ SELECT
     , catname as category_name
     , catdesc as category_description
 FROM
-    {{ source('tickit','category')}}
+    {{ ref('category_pipe') }}

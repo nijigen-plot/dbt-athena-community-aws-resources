@@ -113,6 +113,7 @@ Resources:
               - s3:ListMultipartUploadParts
               - s3:AbortMultipartUpload
               - s3:PutObject
+              - s3:DeleteObject
             Resource:
               - !Sub arn:${AWS::Partition}:s3:::${QueryOutputS3Bucket}
               - !Sub arn:${AWS::Partition}:s3:::${QueryOutputS3Bucket}/*

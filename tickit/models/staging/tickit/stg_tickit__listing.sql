@@ -8,4 +8,4 @@ SELECT
     , totalprice as total_price
     , listtime as list_time
 FROM
-    {{source('tickit','listing')}}
+    {{ ref('listings_pipe') }}

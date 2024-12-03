@@ -8,4 +8,4 @@ SELECT
     , year
     , holiday
 FROM
-    {{ source('tickit','date')}}
+    {{ ref('date2008_pipe') }}

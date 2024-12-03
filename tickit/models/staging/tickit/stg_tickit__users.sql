@@ -19,4 +19,4 @@ SELECT
     , likebroadway as like_broadway
     , likemusicals as like_musicals
 FROM
-    {{ source('tickit','users')}}
+    {{ ref('allusers_pipe') }}
