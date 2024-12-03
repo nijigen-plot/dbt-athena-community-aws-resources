@@ -1,0 +1,27 @@
+version: 2
+
+seeds:
+  - name: allevents_pipe
+    config:
+      delimiter: "|"
+  - name: allusers_pipe
+    config:
+      delimiter: "|"
+  - name: category_pipe
+    config:
+      delimiter: "|"
+  - name: date2008_pipe
+    config:
+      delimiter: "|"
+  - name: listings_pipe
+    config:
+      delimiter: "|"
+      column_types:
+        totalprice: decimal(8,2)
+        priceperticket: decimal(8,2)
+  - name: sales_tab
+    config:
+      delimiter: "\t"
+  - name: venue_pipe
+    config:
+      delimiter: "|"

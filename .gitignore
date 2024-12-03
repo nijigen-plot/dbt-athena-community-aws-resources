@@ -1,3 +1,10 @@
 /target
 /logs
 .dbt/.user.yml
+/tickit/seeds/allevents_pipe.csv
+/tickit/seeds/allusers_pipe.csv
+/tickit/seeds/category_pipe.csv
+/tickit/seeds/date2008_pipe.csv
+/tickit/seeds/listings_pipe.csv
+/tickit/seeds/sales_tab.csv
+/tickit/seeds/venue_pipe.csv
