@@ -444,7 +444,5 @@ Resources:
             Value: {{ dbt_table_resource_s3_bucket }}
           - Name: QUERY_OUTPUT_S3_BUCKET
             Value: {{ query_output_s3_bucket }}
-          - Name: AWS_PROFILE_NAME
-            Value: default
       PlatformCapabilities:
         - FARGATE

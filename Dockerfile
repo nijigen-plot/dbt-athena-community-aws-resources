@@ -40,3 +40,4 @@ RUN touch tickit/seeds/allevents_pipe.csv && \
 COPY ./dbt_project.yml dbt_project.yml
 COPY ./.dbt/profiles.yml /root/.dbt/profiles.yml
 COPY ./generate_static_html.py generate_static_html.py
+RUN sed -i '/aws_profile_name: .*/d' /root/.dbt/profiles.yml
