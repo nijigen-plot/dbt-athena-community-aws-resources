@@ -10,7 +10,7 @@ States:
         Command:
           - "/bin/bash"
           - "-c"
-          - "source $HOME/.rye/env && rye run dbt run"
+          - "source $HOME/.rye/env && rye run dbt run --warn-error"
       JobQueue: dbt-batch-job-queue
       JobDefinition: dbt-batch-job-definition
     Next: dbt docs generate
