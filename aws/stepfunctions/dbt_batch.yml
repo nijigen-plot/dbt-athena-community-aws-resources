@@ -28,7 +28,7 @@ States:
         Command:
           - "/bin/bash"
           - "-c"
-          - "source $HOME/.rye/env && rye run dbt docs generate && rye run python generate_static_html.py && aws s3 cp target/index2.html s3://nijipro-dbt-resources/docs.html"
+          - "source $HOME/.rye/env && rye run dbt docs generate && rye run python generate_static_html.py && aws s3 cp target/index2.html s3://nijipro-dbt-resources-test/docs.html"
       JobQueue: dbt-batch-job-queue
       JobDefinition: dbt-batch-job-definition
     Next: dbt test
