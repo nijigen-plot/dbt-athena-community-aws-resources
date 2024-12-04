@@ -33,6 +33,7 @@ phases:
       - >
         aws ecr get-login-password --region ap-northeast-1 |
         docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com
+      - aws ecr describe-repository-name dbt-batch || aws ecr create-repository --repository-name dbt-batch --region ap-northeast-1 --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
       - docker tag dbt-batch:latest $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/dbt-batch:latest
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/dbt-batch:latest
       - cd $ORIGINAL_DIR
