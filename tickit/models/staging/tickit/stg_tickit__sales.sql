@@ -5,7 +5,7 @@ SELECT
     , buyerid as buyer_id
     , eventid as event_id
     , dateid as date_id
-    , qtysold as quantity_sold
+    , qtysold as qtysold
     , pricepaid as price_paid
     , commission
     , saletime as sale_time

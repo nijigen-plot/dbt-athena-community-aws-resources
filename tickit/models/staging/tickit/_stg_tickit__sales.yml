@@ -14,7 +14,7 @@ models:
         data_type: int
       - name: date_id
         data_type: smallint
-      - name: quantity_sold
+      - name: qtysold
         data_type: smallint
       - name: price_paid
         data_type: decimal(8,2)
