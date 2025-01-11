@@ -7,7 +7,7 @@ authors = [
 ]
 dependencies = [
     "dbt-athena-community==1.8.4",
-    "dbt-osmosis==0.13.2",
+    "dbt-osmosis @ git+https://github.com/z3z1ma/dbt-osmosis.git@21f52646a8aef117045d5c34659f53385ea27e2c",
     "jinja2>=3.1.4",
 ]
 readme = "README.md"
