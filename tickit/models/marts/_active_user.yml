@@ -8,5 +8,4 @@ models:
           - unique
           - not_null
       - name: user_count
-        description: ''
         data_type: bigint
