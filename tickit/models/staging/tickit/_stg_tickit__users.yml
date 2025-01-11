@@ -3,59 +3,40 @@ models:
   - name: stg_tickit__users
     columns:
       - name: user_id
-        description: ''
         data_type: int
       - name: user_name
-        description: ''
         data_type: varchar(64)
       - name: first_name
-        description: ''
         data_type: varchar(256)
       - name: last_name
-        description: ''
         data_type: varchar(256)
       - name: full_name
-        description: ''
         data_type: string
       - name: city
-        description: ''
         data_type: varchar(256)
       - name: state
-        description: ''
         data_type: varchar(16)
       - name: email
-        description: ''
         data_type: varchar(512)
       - name: phone_number
-        description: ''
         data_type: varchar(64)
       - name: like_sports
-        description: ''
         data_type: boolean
       - name: like_theatre
-        description: ''
         data_type: boolean
       - name: like_concerts
-        description: ''
         data_type: boolean
       - name: like_jazz
-        description: ''
         data_type: boolean
       - name: like_classical
-        description: ''
         data_type: boolean
       - name: like_opera
-        description: ''
         data_type: boolean
       - name: like_rock
-        description: ''
         data_type: boolean
       - name: like_vegas
-        description: ''
         data_type: boolean
       - name: like_broadway
-        description: ''
         data_type: boolean
       - name: like_musicals
-        description: ''
         data_type: boolean

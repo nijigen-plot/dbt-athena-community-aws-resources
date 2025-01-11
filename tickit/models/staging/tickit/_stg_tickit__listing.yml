@@ -3,26 +3,18 @@ models:
   - name: stg_tickit__listing
     columns:
       - name: list_id
-        description: ''
         data_type: int
       - name: seller_id
-        description: ''
         data_type: int
       - name: event_id
-        description: ''
         data_type: int
       - name: date_id
-        description: ''
         data_type: smallint
       - name: available_tickets
-        description: ''
         data_type: smallint
       - name: price_per_ticket
-        description: ''
         data_type: decimal(8,2)
       - name: total_price
-        description: ''
         data_type: decimal(8,2)
       - name: list_time
-        description: ''
         data_type: timestamp

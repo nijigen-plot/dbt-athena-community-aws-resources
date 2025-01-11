@@ -3,26 +3,18 @@ models:
   - name: stg_tickit__date
     columns:
       - name: date_id
-        description: ''
         data_type: smallint
       - name: calendar_date
-        description: ''
         data_type: date
       - name: day
-        description: ''
         data_type: varchar(16)
       - name: week
-        description: ''
         data_type: smallint
       - name: month
-        description: ''
         data_type: varchar(32)
       - name: quarter
-        description: ''
         data_type: varchar(32)
       - name: year
-        description: ''
         data_type: smallint
       - name: holiday
-        description: ''
         data_type: boolean

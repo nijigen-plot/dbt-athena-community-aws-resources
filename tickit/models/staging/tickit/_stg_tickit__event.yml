@@ -3,20 +3,14 @@ models:
   - name: stg_tickit__event
     columns:
       - name: event_id
-        description: ''
         data_type: int
       - name: venue_id
-        description: ''
         data_type: smallint
       - name: category_id
-        description: ''
         data_type: smallint
       - name: date_id
-        description: ''
         data_type: smallint
       - name: event_name
-        description: ''
         data_type: varchar(1024)
       - name: start_time
-        description: ''
         data_type: timestamp

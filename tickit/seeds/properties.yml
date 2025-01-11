@@ -3,25 +3,150 @@ version: 2
 seeds:
   - name: allevents_pipe
     config:
-      delimiter: "|"
+      delimiter: '|'
+    columns:
+      - name: eventid
+        data_type: int
+      - name: venueid
+        data_type: int
+      - name: catid
+        data_type: int
+      - name: dateid
+        data_type: int
+      - name: eventname
+        data_type: string
+      - name: starttime
+        data_type: timestamp
   - name: allusers_pipe
     config:
-      delimiter: "|"
+      delimiter: '|'
+    columns:
+      - name: userid
+        data_type: int
+      - name: username
+        data_type: string
+      - name: firstname
+        data_type: string
+      - name: lastname
+        data_type: string
+      - name: city
+        data_type: string
+      - name: state
+        data_type: string
+      - name: email
+        data_type: string
+      - name: phone
+        data_type: string
+      - name: likesports
+        data_type: boolean
+      - name: liketheatre
+        data_type: boolean
+      - name: likeconcerts
+        data_type: boolean
+      - name: likejazz
+        data_type: boolean
+      - name: likeclassical
+        data_type: boolean
+      - name: likeopera
+        data_type: boolean
+      - name: likerock
+        data_type: boolean
+      - name: likevegas
+        data_type: boolean
+      - name: likebroadway
+        data_type: boolean
+      - name: likemusicals
+        data_type: boolean
   - name: category_pipe
     config:
-      delimiter: "|"
+      delimiter: '|'
+    columns:
+      - name: catid
+        data_type: int
+      - name: catgroup
+        data_type: string
+      - name: catname
+        data_type: string
+      - name: catdesc
+        data_type: string
   - name: date2008_pipe
     config:
-      delimiter: "|"
+      delimiter: '|'
+    columns:
+      - name: dateid
+        data_type: int
+      - name: caldate
+        data_type: date
+      - name: day
+        data_type: string
+      - name: week
+        data_type: int
+      - name: month
+        data_type: string
+      - name: qtr
+        data_type: int
+      - name: year
+        data_type: int
+      - name: holiday
+        data_type: boolean
   - name: listings_pipe
     config:
-      delimiter: "|"
+      delimiter: '|'
       column_types:
         totalprice: decimal(8,2)
         priceperticket: decimal(8,2)
+    columns:
+      - name: listid
+        data_type: int
+      - name: sellerid
+        data_type: int
+      - name: eventid
+        data_type: int
+      - name: dateid
+        data_type: int
+      - name: numtickets
+        data_type: int
+      - name: priceperticket
+        data_type: decimal(8,2)
+      - name: totalprice
+        data_type: decimal(8,2)
+      - name: listtime
+        data_type: timestamp
   - name: sales_tab
     config:
       delimiter: "\t"
+    columns:
+      - name: salesid
+        data_type: int
+      - name: listid
+        data_type: int
+      - name: sellerid
+        data_type: int
+      - name: buyerid
+        data_type: int
+      - name: eventid
+        data_type: int
+      - name: dateid
+        data_type: int
+      - name: qtysold
+        data_type: int
+      - name: pricepaid
+        data_type: int
+      - name: commission
+        data_type: double
+      - name: saletime
+        data_type: string
   - name: venue_pipe
     config:
-      delimiter: "|"
+      delimiter: '|'
+    columns:
+      - name: venueid
+        data_type: int
+      - name: venuename
+        data_type: string
+      - name: venuecity
+        data_type: string
+      - name: venuestate
+        data_type: string
+      - name: venueseats
+        data_type: string

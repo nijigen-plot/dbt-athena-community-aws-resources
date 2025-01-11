@@ -3,14 +3,10 @@ models:
   - name: stg_tickit__category
     columns:
       - name: category_id
-        description: ''
         data_type: smallint
       - name: category_group
-        description: ''
         data_type: varchar(64)
       - name: category_name
-        description: ''
         data_type: varchar(64)
       - name: category_description
-        description: ''
         data_type: varchar(256)

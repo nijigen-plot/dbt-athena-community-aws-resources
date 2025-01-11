@@ -3,17 +3,12 @@ models:
   - name: stg_tickit__venue
     columns:
       - name: venue_id
-        description: ''
         data_type: smallint
       - name: venue_name
-        description: ''
         data_type: varchar(512)
       - name: venue_city
-        description: ''
         data_type: varchar(128)
       - name: venue_state
-        description: ''
         data_type: varchar(16)
       - name: venue_seats
-        description: ''
         data_type: int
