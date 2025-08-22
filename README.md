@@ -2,6 +2,10 @@
 
 This Repository for running dbt-athena in AWS environment.
 
+Please see this link
+
+https://qiita.com/nijigen_plot/items/83547f961b5db2d44e67
+
 # Setup
 
 ## 1. Install and Sync rye
@@ -23,9 +27,11 @@ $ direnv allow
 
 ## 3. AWS Console
 
-Please see this link(dummy)
+Please see this link
 
-## 4. Write constants in .envrc 
+https://qiita.com/nijigen_plot/items/83547f961b5db2d44e67#aws%E3%82%B3%E3%83%B3%E3%82%BD%E3%83%BC%E3%83%AB%E8%A8%AD%E5%AE%9A
+
+## 4. Write constants in .envrc
 
 ```
 #!/bin/bash
