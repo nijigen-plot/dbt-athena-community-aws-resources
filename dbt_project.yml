@@ -45,3 +45,5 @@ models:
       +table_type: hive
 seeds:
   +quote_columns: false
+  tickit:
+    +dbt-osmosis" _{seed}.yml"
