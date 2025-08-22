@@ -8,3 +8,4 @@
 /tickit/seeds/listings_pipe.csv
 /tickit/seeds/sales_tab.csv
 /tickit/seeds/venue_pipe.csv
+.envrc
